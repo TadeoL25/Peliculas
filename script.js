@@ -2,7 +2,11 @@ const API_KEY = 'api_key=f983f1a73e02ec0fd3c6c40e9180ffa5';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_URL = BASE_URL + '/discover/movie?include_adult=true&include_video=false&language=en-US&page=1&sort_by=vote_count.desc&' + API_KEY;
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+const SEARCH_URL = BASE_URL + '/search/movie?' + API_KEY;
+
 const main = document.getElementById('main');
+const form = document.getElementById('form');
+const search = document.getElementById('search');
 let topCounter = 0;
 
 getPelis(API_URL);
@@ -101,3 +105,14 @@ function scrollToCards(event) {
     const cardsSection = document.getElementById('main');
     cardsSection.scrollIntoView({ behavior: 'smooth' });
 }
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const searchTerm = search.value;
+    if(searchTerm) {
+        getPelis(SEARCH_URL+ '&query='+ searchTerm)
+    }else{
+        getPelis(API_URL);
+    }
+});
