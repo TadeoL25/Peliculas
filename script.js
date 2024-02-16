@@ -97,36 +97,3 @@ function scrollToCards(event) {
     const cardsSection = document.getElementById('main');
     cardsSection.scrollIntoView({ behavior: 'smooth' });
 }
-
-// Función para traducir el overview al idioma deseado
-function translateOverview(overview, targetLanguage) {
-    const settings = {
-        async: true,
-        crossDomain: true,
-        url: 'https://google-translator9.p.rapidapi.com/v2/translate',
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': '462a288322msh405fc9ea2d873dfp11d878jsn05ac89c7c840',
-            'X-RapidAPI-Host': 'google-translator9.p.rapidapi.com'
-        },
-        processData: false,
-        data: JSON.stringify({
-            q: overview,
-            target: targetLanguage
-        })
-    };
-
-    // Realiza la solicitud para traducir el overview al idioma deseado
-    $.ajax(settings)
-        .done(function(response) {
-            const translatedOverview = response.data.translation;
-            // Actualiza el contenido del modal con el overview traducido
-            document.getElementById('modalContent').innerHTML += `
-                <p>Resumen traducido: ${translatedOverview}</p>
-            `;
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('Error al traducir el overview:', errorThrown);
-        });
-}
