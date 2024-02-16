@@ -1,11 +1,9 @@
-//TMBD
-
 const API_KEY = 'api_key=f983f1a73e02ec0fd3c6c40e9180ffa5';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_URL = BASE_URL + '/discover/movie?include_adult=true&include_video=false&language=en-US&page=1&sort_by=vote_count.desc&' + API_KEY;
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
-
 const main = document.getElementById('main');
+let topCounter = 0;
 
 getPelis(API_URL);
 
@@ -21,21 +19,29 @@ function getPelis(url){
 function showPelis(data){
     main.innerHTML = '';
 
-    data.forEach(peli => {
+    data.forEach((peli, index) => {
         const { id, title, poster_path, vote_average, overview } = peli;
         const peliCard = document.createElement('div');
         peliCard.classList.add('peli-card');
         peliCard.dataset.movieId = id;
+
+        topCounter++; // Incrementa el contador para cada película
+
         peliCard.innerHTML = `
             <div class="card">
                 <img src="${IMG_URL + poster_path}" alt="${title}" class="card-img-top">
                 <div class="card-body">
                     <h5 class="card-title text-dark bg-light">${title}</h5>
                     <p class="card-text text-dark">Rating: <span class="${getColor(vote_average)}">${vote_average}</span></p>
-                    
                 </div>
             </div>
         `;
+        
+        // Agrega el badge al card
+        const badge = document.createElement('span');
+        badge.classList.add('badge', 'badge-primary', 'position-absolute', 'top-0', 'end-0', 'mt-2', 'me-2');
+        badge.innerText = `Top ${topCounter}`;
+        peliCard.querySelector('.card').appendChild(badge);
 
         main.appendChild(peliCard);
     });
@@ -60,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetCard) {
             const movieId = targetCard.dataset.movieId; 
             const movieDetailsURL = `${BASE_URL}/movie/${movieId}?${API_KEY}`; 
-
             
             fetch(movieDetailsURL)
                 .then(res => res.json())
@@ -74,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p>Idioma original: ${original_language}</p>
                         <p>Rating: ${vote_average}</p>
                         <p>Resumen: ${overview}</p>
-                        <!-- Agrega más detalles de la película según sea necesario -->
                     `;
 
                     peliModal.show(); 
